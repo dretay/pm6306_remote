@@ -5,7 +5,10 @@ import * as CounterActions from '../actions/counter';
 
 function mapStateToProps(state) {
   return {
-    counter: state.counter
+    primary_reading_units: state.primary_reading_units,
+    primary_reading_value: state.primary_reading_value,
+    secondary_reading_units: state.secondary_reading_units,
+    secondary_reading_value: state.secondary_reading_value
   };
 }
 
