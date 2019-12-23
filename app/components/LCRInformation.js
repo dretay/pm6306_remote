@@ -30,7 +30,9 @@ export default class LCRInformation extends Component<Props> {
       fast_measure: default_value,
       binning: default_value,
       fixed_position: default_value,
-      range_hold: default_value
+      range_hold: default_value,
+      meas_voltage: default_value,
+      meas_current: default_value
     };
   }
 
@@ -116,23 +118,82 @@ export default class LCRInformation extends Component<Props> {
     pm6306.send_message("*LRN?").then((result)=>{
       let [mode,param,test_signal, trigger, average,frequency,ac_level,dc_bias,dc_bias_enabled,fixture,deviation,fast_measure,binning, fixed_position, range_hold] = result.split(";")
       console.log(result)
-      this.setState({
-        mode: this.format_mode(mode),
-        param: this.format_param(param),
-        test_signal: test_signal,
-        trigger: trigger,
-        average: this.format_average(average),
-        frequency: this.format_frequency(frequency),
-        ac_level: this.format_ac_level(ac_level),
-        dc_bias: this.format_dc_bias(dc_bias_enabled, dc_bias),
-        fixture: this.format_fixture(fixture),
-        deviation: deviation,
-        fast_measure: fast_measure,
-        binning: binning,
-        fixed_position: this.format_fixed_position(fixed_position),
-        range_hold: this.format_range_hold(range_hold)
-      });
+      let state_copy = this.state;
+
+      state_copy.mode = this.format_mode(mode);
+      state_copy.param = this.format_param(param);
+      state_copy.test_signal = test_signal;
+      state_copy.trigger = trigger;
+      state_copy.average = this.format_average(average);
+      state_copy.frequency = this.format_frequency(frequency);
+      state_copy.ac_level = this.format_ac_level(ac_level);
+      state_copy.dc_bias = this.format_dc_bias(dc_bias_enabled, dc_bias);
+      state_copy.fixture = this.format_fixture(fixture);
+      state_copy.deviation = deviation;
+      state_copy.fast_measure = fast_measure;
+      state_copy.binning = binning;
+      state_copy.fixed_position = this.format_fixed_position(fixed_position);
+      state_copy.range_hold = this.format_range_hold(range_hold);
+
+      this.setState(state_copy);
     });
+
+    this.start_timer();
+  }
+  start_timer(){
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+  stop_timer(){
+    clearInterval(this.timerID);
+  }
+  componentWillUnmount() {
+    this.stop_timer();
+  }
+  tick() {
+    this.stop_timer();
+    pm6306.send_message("vol?;cur?").then((result)=>{
+      const regexp = /(\w)\s([0-9-E\.]+);?/g;
+      const readings = [...result.matchAll(regexp)];
+      let state_copy = this.state;
+
+      if(readings.length == 0){
+      }
+      else{
+        if(readings.length > 1){
+          let current_val = Number(readings[1][2]);
+          let converted_current = convert(current_val).from('A').toBest({cutOffNumber: 0.1, reverse:true, maxNumber: 1000})
+          let rounded_current = Math.round(converted_current.val * 100) / 100;
+          state_copy.meas_current = `${rounded_current} ${converted_current.unit}`;
+
+        }
+        let voltage_val = Number(readings[0][2]);
+        let converted_voltage = convert(voltage_val).from('V').toBest({reverse:true, maxNumber: 1000})
+        let rounded_voltage = Math.round(converted_voltage.val * 100) / 100;
+        state_copy.meas_voltage = `${rounded_voltage} ${converted_voltage.unit}`;
+      }
+      this.setState(state_copy);
+      this.start_timer();
+
+    });
+    // pm6306.send_message("CURRENT?").then((result)=>{
+    // });
+    // pm6306.send_message("component?").then((result)=>{
+    //   let [,primary_parameter, raw_primary_value, secondary_parameter, raw_secondary_value] = result.match(/^(\w)\s(.+);(\w)\s(.+)$/);
+    //   let primary_value = this.format_component(primary_parameter, raw_primary_value);
+    //   let secondary_value = this.format_component(secondary_parameter, raw_secondary_value);
+    //   this.setState({
+    //     primary_parameter: primary_parameter,
+    //     primary_value: primary_value.val,
+    //     primary_units: primary_value.label,
+
+    //     secondary_parameter: secondary_parameter,
+    //     secondary_value: secondary_value.val,
+    //     secondary_units: secondary_value.label
+    //   });
+    // });
   }
 
   render() {
@@ -143,10 +204,10 @@ export default class LCRInformation extends Component<Props> {
     return (
       <div className="container">
         <div className="row">
-          <div className={`col-7 p-0`}>
+          <div className={`col-5 p-0`}>
             <div className={`card bg-secondary ${styles.info_panel1}`} >
               <div className="card-header text-center p-0" >
-                <strong>Acquire</strong>
+                <strong>Acquisition</strong>
               </div>
               <div className="card-body p-0" >
                 <table className="table table-dark table-sm m-0">
@@ -174,8 +235,8 @@ export default class LCRInformation extends Component<Props> {
               </div>
             </div>
           </div>
-          <div className={`col-5 p-0`}>
-            <div className={`card bg-secondary ${styles.info_panel1}`} >
+          <div className={`col-4 p-0`}>
+            <div className={`card bg-secondary ${styles.info_panel2}`} >
               <div className="card-header text-center p-0" >
                 <strong>LCR</strong>
               </div>
@@ -199,6 +260,32 @@ export default class LCRInformation extends Component<Props> {
                       <td className="text-center table-active"></td>
                       <td className="text-center table-dark"></td>
                       <td className="text-center table-active"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className={`col-3 p-0`}>
+            <div className={`card bg-secondary ${styles.info_panel3}`} >
+              <div className="card-body p-0" >
+                <table className="table table-dark m-0">
+                  <tbody>
+                    <tr className={`${styles.info_panel3_tr}`}>
+                      <td className="align-middle text-center table-dark">
+                        <strong>Voltage</strong>
+                      </td>
+                      <td className="align-middle text-center table-active">
+                        {this.state.meas_voltage}
+                      </td>
+                    </tr>
+                    <tr className={`${styles.info_panel3_tr}`}>
+                      <td className="align-middle text-center table-dark">
+                        <strong>Current</strong>
+                      </td>
+                      <td className="align-middle text-center table-active">
+                        {this.state.meas_current}
+                      </td>
                     </tr>
                   </tbody>
                 </table>

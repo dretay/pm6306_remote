@@ -1,3 +1,15 @@
 .info_panel1 {
-  /* width: 23rem; */
+  font-size: medium;
+}
+
+.info_panel2 {
+  font-size: medium;
+}
+.info_panel3 {
+  font-size: medium;
+
+}
+.info_panel3_tr{
+  height: 2.6em;
+  font-size: x-large;
 }

@@ -15,6 +15,7 @@ const SPECIAL_CMD_STATUS_BYTE = `${SPECIAL_CMD_ESC}7`;
 const SPECIAL_CMD_DEVICE_TRIGGER = `${SPECIAL_CMD_ESC}8`;
 
 const CLEAR_STATUS_CMD = "*CLS";
+const RESET_CMD = "*RST";
 const STANDARD_EVENT_ENABLE_CMD = "*ESE";
 const READ_STATUS_BYTE_QUERY = "*STB?";
 const IDENTIFICATION_CMD = "*IDN?";
@@ -28,12 +29,14 @@ function sleep(ms){
 
 class PM6306 {
   constructor(){
-    this.queue = new Queue(1,100);
+    this.queue = new Queue(1,Infinity);
     this.port = null;
     this.parser = null;
 
     this.queue.add(()=> this.connect());
     this.queue.add(()=> this.send_command(SPECIAL_CMD_GO_REMOTE));//go remote
+    this.queue.add(()=> this.send_command(RESET_CMD));//reset
+    this.queue.add(()=> sleep(1000));//wait 1s for device to re-init
     this.queue.add(()=> this.send_command(CLEAR_STATUS_CMD));//clear status
     this.queue.add(()=> this.send_command(`${STANDARD_EVENT_ENABLE_CMD} 255`)); //clear status
     this.queue.add(()=> this.send_command(`${IDENTIFICATION_CMD}`)); //get identification string
@@ -82,8 +85,7 @@ class PM6306 {
     //send command
     let data = await this.send_command(command);
 
-    //wait 100md
-
+    //wait 100ms
     await sleep(100);
     //get the status byte
     let status = await this.send_command(READ_STATUS_BYTE_QUERY);

@@ -25,15 +25,21 @@ export default class Parameters extends Component<Props> {
       secondary_units: default_value
     }
   }
-  componentDidMount() {
+  stop_timer(){
+    clearInterval(this.timerID);
+  }
+  start_timer(){
     this.timerID = setInterval(
       () => this.tick(),
       1000
     );
   }
+  componentDidMount() {
+    this.start_timer();
+  }
 
   componentWillUnmount() {
-    clearInterval(this.timerID);
+    this.stop_timer();
   }
 
   format_component(component, value){
@@ -59,10 +65,28 @@ export default class Parameters extends Component<Props> {
   }
 
   tick() {
-    pm6306.send_message("component?").then((result)=>{
-      let [,primary_parameter, raw_primary_value, secondary_parameter, raw_secondary_value] = result.match(/^(\w)\s(.+);(\w)\s(.+)$/);
-      let primary_value = this.format_component(primary_parameter, raw_primary_value);
-      let secondary_value = this.format_component(secondary_parameter, raw_secondary_value);
+    this.stop_timer();
+    pm6306.send_message("com?").then((result)=>{
+      let primary_parameter = "---"
+      let primary_value = {val: "---",label: "---"};
+      let secondary_parameter = "---"
+      let secondary_value = {val: "---",label: "---"};
+
+      const regexp = /(\w)\s([0-9-E\.]+);?/g;
+      const readings = [...result.matchAll(regexp)];
+
+      if(readings.length == 0){
+      }
+      else{
+        if(readings.length > 1){
+          secondary_parameter = readings[1][1];
+          secondary_value = this.format_component(readings[1][1], readings[1][2]);
+        }
+        primary_parameter = readings[0][1];
+        primary_value = this.format_component(readings[0][1], readings[0][2]);
+      }
+
+
       this.setState({
         primary_parameter: primary_parameter,
         primary_value: primary_value.val,
@@ -72,6 +96,7 @@ export default class Parameters extends Component<Props> {
         secondary_value: secondary_value.val,
         secondary_units: secondary_value.label
       });
+      this.start_timer();
     });
   }
 
