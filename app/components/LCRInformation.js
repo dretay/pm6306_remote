@@ -4,10 +4,16 @@ import { Link } from 'react-router-dom';
 import styles from './LCRInformation.css';
 import routes from '../constants/routes.json';
 import pm6306 from "../utils/pm6306";
-let convert = require('convert-units')
+let convert = require('convert-units');
+import Dropdown from 'react-bootstrap/Dropdown';
+import Popover from 'react-bootstrap/Popover';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Button from 'react-bootstrap/Button'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 
 type Props = {
-
+  measured_voltage: string,
+  measured_current: string
 };
 
 export default class LCRInformation extends Component<Props> {
@@ -30,9 +36,7 @@ export default class LCRInformation extends Component<Props> {
       fast_measure: default_value,
       binning: default_value,
       fixed_position: default_value,
-      range_hold: default_value,
-      meas_voltage: default_value,
-      meas_current: default_value
+      range_hold: default_value
     };
   }
 
@@ -138,68 +142,76 @@ export default class LCRInformation extends Component<Props> {
       this.setState(state_copy);
     });
 
-    this.start_timer();
   }
-  start_timer(){
-    this.timerID = setInterval(
-      () => this.tick(),
-      1000
-    );
+
+
+  format_voltage(voltage){
+    let voltage_val = Number(voltage);
+    let converted_voltage = convert(voltage_val).from('V').toBest({reverse:true, maxNumber: 1000})
+    let rounded_voltage = Math.round(converted_voltage.val * 100) / 100;
+    return `${rounded_voltage} ${converted_voltage.unit}`
   }
-  stop_timer(){
-    clearInterval(this.timerID);
-  }
-  componentWillUnmount() {
-    this.stop_timer();
-  }
-  tick() {
-    this.stop_timer();
-    pm6306.send_message("vol?;cur?").then((result)=>{
-      const regexp = /(\w)\s([0-9-E\.]+);?/g;
-      const readings = [...result.matchAll(regexp)];
-      let state_copy = this.state;
+  format_current(current){
+    let current_val = Number(current);
+    let converted_current = convert(current_val).from('A').toBest({cutOffNumber: 0.1, reverse:true, maxNumber: 1000})
+    let rounded_current = Math.round(converted_current.val * 100) / 100;
+    return `${rounded_current} ${converted_current.unit}`;
 
-      if(readings.length == 0){
-      }
-      else{
-        if(readings.length > 1){
-          let current_val = Number(readings[1][2]);
-          let converted_current = convert(current_val).from('A').toBest({cutOffNumber: 0.1, reverse:true, maxNumber: 1000})
-          let rounded_current = Math.round(converted_current.val * 100) / 100;
-          state_copy.meas_current = `${rounded_current} ${converted_current.unit}`;
-
-        }
-        let voltage_val = Number(readings[0][2]);
-        let converted_voltage = convert(voltage_val).from('V').toBest({reverse:true, maxNumber: 1000})
-        let rounded_voltage = Math.round(converted_voltage.val * 100) / 100;
-        state_copy.meas_voltage = `${rounded_voltage} ${converted_voltage.unit}`;
-      }
-      this.setState(state_copy);
-      this.start_timer();
-
-    });
-    // pm6306.send_message("CURRENT?").then((result)=>{
-    // });
-    // pm6306.send_message("component?").then((result)=>{
-    //   let [,primary_parameter, raw_primary_value, secondary_parameter, raw_secondary_value] = result.match(/^(\w)\s(.+);(\w)\s(.+)$/);
-    //   let primary_value = this.format_component(primary_parameter, raw_primary_value);
-    //   let secondary_value = this.format_component(secondary_parameter, raw_secondary_value);
-    //   this.setState({
-    //     primary_parameter: primary_parameter,
-    //     primary_value: primary_value.val,
-    //     primary_units: primary_value.label,
-
-    //     secondary_parameter: secondary_parameter,
-    //     secondary_value: secondary_value.val,
-    //     secondary_units: secondary_value.label
-    //   });
-    // });
   }
 
   render() {
 
-    const {
-    } = this.props;
+    let measured_voltage = this.format_voltage(this.props.measured_voltage);
+    let measured_current = this.format_current(this.props.measured_current);
+
+    const popover = (
+      <Popover id="popover-basic">
+        <Popover.Title as="h3">Popover right</Popover.Title>
+        <Popover.Content>
+
+          <div className="btn-group-vertical ml-4 mt-4" role="group" aria-label="Basic example">
+              <div className="btn-group">
+                  <input className={`text-center form-control-lg mb-2 ${styles.input_text}`} id="code"/>
+              </div>
+              <ButtonGroup >
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>7</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>8</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>9</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>k</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>m</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.wide_keypad_button}`}>Enter</Button>
+              </ButtonGroup>
+              <ButtonGroup >
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>4</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>5</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>6</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>M</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>µ</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.wide_keypad_button}`}>Back</Button>
+              </ButtonGroup>
+              <ButtonGroup >
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>1</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>2</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>3</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>G</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>n</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.wide_keypad_button}`}>Clear</Button>
+              </ButtonGroup>
+              <ButtonGroup >
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>0</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>.</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>±</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>Exp</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ${styles.keypad_button}`}>p</Button>
+                <Button variant="light" className={`btn btn-outline-secondary py-3 ml-10 ${styles.wide_keypad_button}`}>Exit</Button>
+              </ButtonGroup>
+
+
+          </div>
+        </Popover.Content>
+      </Popover>
+    );
+
 
     return (
       <div className="container">
@@ -214,13 +226,39 @@ export default class LCRInformation extends Component<Props> {
                   <tbody>
                     <tr>
                       <td className="text-center table-dark"><strong>Frequency</strong></td>
-                      <td className="text-center table-active">{this.state.frequency}</td>
+                      <td className="text-center table-active">
+
+                        {this.state.frequency}
+                      </td>
                       <td className="text-center table-dark"><strong>Fixture</strong></td>
-                      <td className="text-center table-active">{this.state.fixture}</td>
+                      <td className="text-center table-active">
+                      <Dropdown>
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic" className="pt-0 pb-0">
+                          {this.state.fixture}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item>0-50 pF</Dropdown.Item>
+                          <Dropdown.Item>50-150 pF</Dropdown.Item>
+                          <Dropdown.Item>150-250 pF</Dropdown.Item>
+                          <Dropdown.Item>250-350 pF</Dropdown.Item>
+                          <Dropdown.Item>350-450 pF</Dropdown.Item>
+                          <Dropdown.Item>450-550 pF</Dropdown.Item>
+                          <Dropdown.Item>550-650 pF</Dropdown.Item>
+                          <Dropdown.Item>650-750 pF</Dropdown.Item>
+                          <Dropdown.Item>750-850 pF</Dropdown.Item>
+                          <Dropdown.Item>850-890 pF</Dropdown.Item>
+                          <Dropdown.Item>950-1050 pF</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                      </td>
                     </tr>
                     <tr>
                       <td className="text-center table-dark"><strong>Avg Count</strong></td>
-                      <td className="text-center table-active">{this.state.average}</td>
+                      <td className="text-center table-active">
+                        <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+                          <Button variant="secondary" className="pt-0 pb-0">{this.state.average}</Button>
+                        </OverlayTrigger>
+                      </td>
                       <td className="text-center table-dark"><strong>Range</strong></td>
                       <td className="text-center table-active">{this.state.range_hold}</td>
                     </tr>
@@ -276,7 +314,7 @@ export default class LCRInformation extends Component<Props> {
                         <strong>Voltage</strong>
                       </td>
                       <td className="align-middle text-center table-active">
-                        {this.state.meas_voltage}
+                        {measured_voltage}
                       </td>
                     </tr>
                     <tr className={`${styles.info_panel3_tr}`}>
@@ -284,7 +322,7 @@ export default class LCRInformation extends Component<Props> {
                         <strong>Current</strong>
                       </td>
                       <td className="align-middle text-center table-active">
-                        {this.state.meas_current}
+                        {measured_current}
                       </td>
                     </tr>
                   </tbody>

@@ -7,8 +7,7 @@ type Props = {
 
 export default class App extends React.Component<Props> {
   props: Props;
-  componentDidMount() {
-  }
+
   render() {
     const { children } = this.props;
     return <>{children}</>;

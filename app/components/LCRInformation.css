@@ -13,3 +13,14 @@
   height: 2.6em;
   font-size: x-large;
 }
+.keypad_button{
+  width: 54px;
+  font-size: medium;
+}
+.wide_keypad_button{
+  width: 74px;
+  margin-left: 20px !important;
+}
+.input_text{
+  width: 100%;
+}
