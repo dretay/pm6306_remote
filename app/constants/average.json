@@ -1,0 +1,6 @@
+[
+  { "label": "OFF", "command": "AVERAGE 0"},
+  { "label": "LOW", "command": "AVERAGE 1"},
+  { "label": "MEDIUM", "command": "AVERAGE 2"},
+  { "label": "HIGH", "command": "AVERAGE 3"}
+]

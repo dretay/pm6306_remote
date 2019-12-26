@@ -1,0 +1,8 @@
+[
+  { "label": "Quality", "command": "PARAM QUALITY" },
+  { "label": "Dissipation", "command": "PARAM DISSIPATION" },
+  { "label": "Phase", "command": "PARAM PHASE" },
+  { "label": "Impedance", "command": "PARAM IMPEDANCE" },
+  { "label": "AUTO", "command": "PARAM AUTO" }
+
+]

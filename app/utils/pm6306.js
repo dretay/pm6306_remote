@@ -96,6 +96,7 @@ class PM6306 {
     return data;
   }
   send_message (command){
+
     return this.queue.add(()=> this._send_message(command));
   }
 }

@@ -1,9 +1,12 @@
 .parameter {
-  width: 10rem;
+  width: 100%;
+  height: 100%;
 }
 .parameter_value {
-  font-size: xxx-large;
+  font-size: 300% !important;
+  height: 100%;
 }
 .value {
-  font-size: xxx-large;
+  font-size: 500%;
+  height: 100%;
 }

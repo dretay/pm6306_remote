@@ -1,0 +1,5 @@
+[
+  { "label": "OFF", "command": "DC_BIAS OFF", "variant": "danger" },
+  { "label": "INT", "command": "DC_BIAS INT", "variant": "primary" },
+  { "label": "EXT", "command": "DC_BIAS EXT", "variant": "warning" }
+]

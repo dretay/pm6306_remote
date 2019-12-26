@@ -1,0 +1,13 @@
+[
+  { "label": "0-50 pF", "command": "SET_FIXTURE 0" },
+  { "label": "50-150 pF", "command": "SET_FIXTURE 1" },
+  { "label": "150-250 pF", "command": "SET_FIXTURE 2" },
+  { "label": "250-350 pF", "command": "SET_FIXTURE 3" },
+  { "label": "350-450 pF", "command": "SET_FIXTURE 4" },
+  { "label": "450-550 pF", "command": "SET_FIXTURE 5" },
+  { "label": "550-650 pF", "command": "SET_FIXTURE 6" },
+  { "label": "650-750 pF", "command": "SET_FIXTURE 7" },
+  { "label": "750-850 pF", "command": "SET_FIXTURE 8" },
+  { "label": "850-890 pF", "command": "SET_FIXTURE 9" },
+  { "label": "950-1050 pF", "command": "SET_FIXTURE 10" }
+]
