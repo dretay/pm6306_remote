@@ -3,6 +3,5 @@
   { "label": "Capacitance", "command": "POSITION_FIX C" },
   { "label": "Inducatance", "command": "POSITION_FIX L" },
   { "label": "Capacitance or Inducance", "command": "POSITION_FIX CL" },
-  { "label": "Manual On", "command": "POSITION_FIX ON" },
   { "label": "Manual Off", "command": "POSITION_FIX OFF" }
 ]

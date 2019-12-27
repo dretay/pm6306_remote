@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-
 import Dropdown from 'react-bootstrap/Dropdown';
+import * as shortid from 'shortid';
 
 import styles from './DropdownChooser.css';
+
 
 type Props = {
   values: Array,
@@ -31,7 +32,7 @@ export default function DropdownChooser({
   const items = []
 
   for (const [index, value] of values.entries()) {
-    items.push(<Dropdown.Item value={value.command} onClick={prepare_callback}>{value.label}</Dropdown.Item> );
+    items.push(<Dropdown.Item key={shortid.generate()} value={value.command} onClick={prepare_callback}>{value.label}</Dropdown.Item> );
   }
 
   return (

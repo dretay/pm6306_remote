@@ -287,7 +287,8 @@
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "serialport": "^8.0.5",
+    "serialport": "^8.0.6",
+    "shortid": "^2.2.15",
     "source-map-support": "^0.5.16"
   },
   "devEngines": {

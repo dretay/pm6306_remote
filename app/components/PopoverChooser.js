@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
-
+import * as shortid from 'shortid';
 import Popover from 'react-bootstrap/Popover';
 import Overlay from 'react-bootstrap/Overlay';
 import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+
 import styles from './PopoverChooser.css';
 
 type Props = {
@@ -35,7 +36,7 @@ export default function PopoverChooser({
   const items = []
 
   for (const [index, value] of values.entries()) {
-    items.push(<Button variant={value.variant} value={value.command} className={`btn`} onClick={prepare_callback}> {value.label} </Button>);
+    items.push(<Button key={shortid.generate()} variant={value.variant} value={value.command} className={`btn`} onClick={prepare_callback}> {value.label} </Button>);
   }
 
   return (

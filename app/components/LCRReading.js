@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import * as shortid from 'shortid';
 
 import Popover from 'react-bootstrap/Popover';
 import Overlay from 'react-bootstrap/Overlay';
@@ -6,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Card from 'react-bootstrap/Card';
 import styles from './LCRReading.css';
+
 
 var convert = require('convert-units')
 
@@ -61,7 +63,7 @@ export default function PopoverChooser({
   const items = []
 
   for (const [index, value] of options.entries()) {
-    items.push(<Dropdown.Item value={value.command} onClick={callback}> {value.label} </Dropdown.Item>);
+    items.push(<Dropdown.Item key={shortid.generate()} value={value.command} onClick={callback}> {value.label} </Dropdown.Item>);
   }
 
 
@@ -76,7 +78,6 @@ export default function PopoverChooser({
         <Card bg="dark" className={`text-center ${styles.parameter}`}>
           <Card.Header className="p-0 bg-secondary">Parameter</Card.Header>
           <Card.Body className={`p-0 `}>
-            <Card.Text>
               <Dropdown drop="right">
                 <Dropdown.Toggle variant="dark" className={`p-0 ${styles.parameter_value}`}>
                   {parameter}
@@ -85,7 +86,6 @@ export default function PopoverChooser({
                   {items}
                 </Dropdown.Menu>
               </Dropdown>
-            </Card.Text>
           </Card.Body>
         </Card>
       </div>
