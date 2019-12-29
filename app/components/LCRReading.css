@@ -3,10 +3,16 @@
   height: 100%;
 }
 .parameter_value {
-  font-size: 500% !important;
+  font-size: 570% !important;
   height: 100%;
 }
+.parameter_value::after {
+  content: none !important;
+}
 .value {
-  font-size: 500%;
+  font-size: 570%;
   height: 100%;
+}
+.dropdown_item {
+  font-size: 200%;
 }

@@ -15,6 +15,8 @@ type Props = {
   options: Array,
   value: string,
   parameter: string,
+  variant: string,
+  dropdir: string,
   callback: () => void
 };
 
@@ -57,13 +59,15 @@ export default function PopoverChooser({
   options,
   value,
   parameter,
+  variant,
+  dropdir,
   callback
 }: Props) {
 
   const items = []
 
   for (const [index, value] of options.entries()) {
-    items.push(<Dropdown.Item key={shortid.generate()} value={value.command} onClick={callback}> {value.label} </Dropdown.Item>);
+    items.push(<Dropdown.Item className={`${styles.dropdown_item}`} key={shortid.generate()} value={value.command} onClick={callback}> {value.label} </Dropdown.Item>);
   }
 
 
@@ -78,8 +82,8 @@ export default function PopoverChooser({
         <Card bg="dark" className={`text-center ${styles.parameter}`}>
           <Card.Header className="p-0 bg-secondary">Parameter</Card.Header>
           <Card.Body className={`p-0 `}>
-              <Dropdown drop="right">
-                <Dropdown.Toggle variant="dark" className={`p-0 ${styles.parameter_value}`}>
+              <Dropdown drop={dropdir} className={`p-0 `}>
+                <Dropdown.Toggle variant="dark" className={`p-0 ${styles.parameter_value} ${variant}`}>
                   {parameter}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -89,7 +93,7 @@ export default function PopoverChooser({
           </Card.Body>
         </Card>
       </div>
-      <div className={`col-10 p-0 text-center text-success bg-dark`}>
+      <div className={`col-10 p-0 text-center ${variant} bg-dark`}>
         <Card bg="dark" className={`text-center ${styles.parameter}`}>
             <Card.Header className="p-0 bg-secondary">&nbsp;</Card.Header>
             <Card.Body className={`p-0`}>

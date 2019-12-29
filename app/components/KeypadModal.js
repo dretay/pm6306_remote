@@ -61,8 +61,8 @@ export default function KeypadModal({ command, button_label, callback }: Props) 
       <Button variant="secondary" className={`${styles.keypad_root_button} pt-0 pb-0 text-center`} onClick={handle_show}>
         {button_label}
       </Button>
-      <Modal show={show} onHide={handle_close} size="xl">
-        <Modal.Body>
+      <Modal show={show} onHide={handle_close}  size="lg">
+        <Modal.Body >
           <div className="container-fluid">
             <div className="row">
               <div className="col-12">

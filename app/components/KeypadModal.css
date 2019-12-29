@@ -1,17 +1,19 @@
-.keypad_root_button{
+.keypad_root_button {
   width: 100%;
+  font-size: large !important;
 }
-.keypad_button{
+.keypad_button {
   width: 54px;
-  font-size: medium;
+  font-size: 170% !important;
 }
-.wide_keypad_button{
+.wide_keypad_button {
   width: 74px;
   margin-left: 20px !important;
 }
-.input_text{
+.input_text {
   width: 100%;
+  font-size: 170% !important;
 }
-.keypad_panel{
+.keypad_panel {
   width: 90%;
 }

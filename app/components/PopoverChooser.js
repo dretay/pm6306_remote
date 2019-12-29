@@ -36,7 +36,7 @@ export default function PopoverChooser({
   const items = []
 
   for (const [index, value] of values.entries()) {
-    items.push(<Button key={shortid.generate()} variant={value.variant} value={value.command} className={`btn`} onClick={prepare_callback}> {value.label} </Button>);
+    items.push(<Button key={shortid.generate()} variant={value.variant} value={value.command} className={`btn ${styles.popover_btn}`} onClick={prepare_callback}> {value.label} </Button>);
   }
 
   return (

@@ -59,14 +59,20 @@ const createWindow = async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
+  let window_options={
     show: false,
     width: 1024,
     height: 728,
     webPreferences: {
       nodeIntegration: true
     }
-  });
+  }
+  if(process.env.NODE_ENV !== 'development'){
+    window_options["fullscreen"] = true;
+    window_options["frame"]= false;
+  }
+
+  mainWindow = new BrowserWindow(window_options);
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 

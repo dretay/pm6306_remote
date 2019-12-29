@@ -119,6 +119,8 @@ export default function FrontPanel({
           value={primary_value}
           parameter={primary_parameter}
           options={primary_options}
+          dropdir="right"
+          variant="text-success"
           callback={change_parameter_from_event}
         />
       </div>
@@ -127,6 +129,8 @@ export default function FrontPanel({
           value={secondary_value}
           parameter={secondary_parameter}
           options={secondary_options}
+          dropdir="up"
+          variant="text-info"
           callback={change_parameter_from_event}
         />
       </div>

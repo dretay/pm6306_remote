@@ -1,3 +1,7 @@
-.dropdown_toggle{
+.dropdown_toggle {
   width: 100%;
+  font-size: large !important;
+}
+.dropdown_item {
+  font-size: 100%;
 }

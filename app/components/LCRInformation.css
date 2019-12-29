@@ -1,15 +1,10 @@
 .info_panel1 {
-  font-size: medium;
+  font-size: large;
 }
-
 .info_panel2 {
-  font-size: medium;
+  font-size: large;
+  height: 100%;
 }
-.info_panel3 {
-  font-size: medium;
-
-}
-.info_panel3_tr{
-  height: 2.6em;
+.info_panel2_tr {
   font-size: x-large;
 }

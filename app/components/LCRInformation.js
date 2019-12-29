@@ -72,7 +72,7 @@ export default function LCRInformation({
 
   return (
     <>
-      <div className={`col-6 p-0`}>
+      <div className={`col-8 p-0`}>
         <div className={`card bg-secondary ${styles.info_panel1}`}>
           <div className="card-header text-center p-0">
             <strong>Acquisition</strong>
@@ -98,12 +98,12 @@ export default function LCRInformation({
         </div>
       </div>
 
-      <div className={`col-6 mt-1 pt-0 pl-0 pr-0 pb-0`}>
-        <div className={`card bg-secondary ${styles.info_panel3}`}>
-          <div className="card-body p-0">
-            <table className="table table-dark m-0">
+      <div className={`col-4 pl-0 pr-0 `}>
+        <div className={`card bg-secondary ${styles.info_panel2}`}>
+          <div className={`card-body p-0`}>
+            <table className="table table-dark m-0 h-100">
               <tbody>
-                <tr className={`${styles.info_panel3_tr}`}>
+                <tr className={`${styles.info_panel2_tr}`}>
                   <td className="align-middle text-center table-dark">
                     <strong>Voltage</strong>
                   </td>
@@ -111,7 +111,7 @@ export default function LCRInformation({
                     {formatted_voltage}
                   </td>
                 </tr>
-                <tr className={`${styles.info_panel3_tr}`}>
+                <tr className={`${styles.info_panel2_tr}`}>
                   <td className="align-middle text-center table-dark">
                     <strong>Current</strong>
                   </td>
