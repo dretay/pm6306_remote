@@ -10,6 +10,7 @@ I've been looking for a project that lets me deep-dive on the USB protocol. I fi
 
 ### Main Features ###
 ![](https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4582.jpg)
+![](https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4586.jpg)
 - 
 
 ### Credits ###
