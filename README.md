@@ -9,7 +9,7 @@ I've been looking for a project that lets me deep-dive on the USB protocol. I fi
 -- This project contains all the code needed to actually enumerate and query USB devies connected to the MAX3421E. 
 
 ### Main Features ###
-![](https://raw.githubusercontent.com/dretay/nrf51422_usb_host/master/IMG_4446.jpg)
+![](https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4585.jpg)
 - 
 
 ### Credits ###
