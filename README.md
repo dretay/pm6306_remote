@@ -19,6 +19,9 @@ on this device that significantly expands the utility of the base unit.
 ### Build Instructions ###
 - TODO
 
+## References
+> Software tools, hardware, and useful articles
+
 ### Software ###
 - [Electron](https://electronjs.org/)
 - [ReactJS](https://reactjs.org/)
