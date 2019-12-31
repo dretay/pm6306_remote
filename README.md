@@ -1,17 +1,29 @@
-## A NRF51422-based usb host ##
+# PM630X User Interface
 
-### Overview ###
+<img src="https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4582.jpg" align="right" width="208">
 
-I've been looking for a project that lets me deep-dive on the USB protocol. I finally settled on trying to take wired devices (mice, keyboards, and joysticks) and expose them over bluetooth. Some of the best mechanical keyboards are USB-only, so i thought it would be useful if you could have a device you connect to those devices that exposed them as a wireless bluetooth decice. This project contains the end result of my experiments: how to connect a MAX3421E USB Host Controller to a NRF51422 Bluetooth SoC over SPI to proxy basically any USB HID devices over bluetooth. 
+> An Electron-based user interface for PM630X LCR meters
 
 
-- [usb_host](https://github.com/dretay/usb_host): 
--- This project contains all the code needed to actually enumerate and query USB devies connected to the MAX3421E. 
+The Fluke / Philips PM630X line of LCR meters were a line of benchtop equipment that allowed the testing of components with a frequency up to 1MHZ. Even though the meter was designed over 20 years ago it is still highly capable and has specs similar to modern commercial meters. The major advantage modern meters have are their updated rich UIs which are much more featureful and powerful than the LED display leveraged in this device. Fortunately PM630X meters include an optional RS232 port which allows fully remote control of the unit. This project leverages this serial port to build a modern high resolution TFT-based UI
+on this device that significantly expands the utility of the base unit. 
 
 ### Main Features ###
-![](https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4582.jpg)
-![](https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4586.jpg)
-- 
+- Redesigned modern UI for displaying measured component values
+  - Shows currently measured voltage and current in addition to primary and secondary component readings
+  - Allows entering numeric values (frequency and voltages) through an on-screen keypad for quicker setup
+  - Allows selection of primary and secondary measurement parameters through on-screen dropdowns
+- (Planned) graphical ability to sweep frequency response for a component
+- (Planned) graphical ability to bin components based on tolerances
 
-### Credits ###
-- Built on top of the awesome [Electron React Boilerplate](https://github.com/electron-react-boilerplate) project.
+### Build Instructions ###
+- TODO
+
+### Software ###
+- [Electron](https://electronjs.org/)
+- [ReactJS](https://reactjs.org/)
+- [Bootstrap](https://getbootstrap.com/) 
+
+### Hardware ###
+- [Odroid C2](https://wiki.odroid.com/odroid-c2/odroid-c2)
+- [Waveshare 4.3inch HDMI LCD](https://www.waveshare.com/4.3inch-hdmi-lcd-b.htm)
