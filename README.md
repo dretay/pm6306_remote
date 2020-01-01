@@ -1,3 +1,4 @@
+
 # PM630X User Interface
 
 <img src="https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4582.jpg" align="right" width="208">
@@ -17,7 +18,21 @@ on this device that significantly expands the utility of the base unit.
 - (Planned) graphical ability to bin components based on tolerances
 
 ### Build Instructions ###
-- TODO
+#### ODROID Setup
+ 1.  in /media/boot/boot.ini setenv max_freq "1752"  # 1.752GHz
+ 2. `apt-get upgrade`. apt-get install -f if stuck
+ 3. `systemd-analyze blame`
+	`systemctl disable  NetworkManager-wait-online apparmor.service snapd.service ModemManager.service speech-dispatcher.service`
+4. `apt-get install unclutter openbox`
+5. edit /etc/xdg/openbox/autostart
+	```
+	xset -dpms                      # turn off display power management system
+	xset s noblank          # turn off screen blanking
+	xset s off                      # turn off screen saver
+	unclutter -idle 0.5 -root&
+	/home/odroid/ElectronReact-0.18.1-arm64.AppImage --no-sandbox&
+	```
+6. ln -s /lib/aarch64-linux-gnu/libz.so.1.2.11 /lib/aarch64-linux-gnu/libz.so
 
 ## References
 > Software tools, hardware, and useful articles
