@@ -12,3 +12,11 @@
 .container a {
   font-size: 1.4rem;
 }
+
+.meter_function_button{
+  width: 100px;
+  height: 100px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: large;
+}

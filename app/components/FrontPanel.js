@@ -25,7 +25,9 @@ export default function FrontPanel({
 
   const [device_setup, setDeviceSetup] = useState("");
 
-
+  const toggle_polling = (value)=>{
+    setIsActive(value);
+  }
   const get_device_setup = () => {
     setIsActive(false);
     return pm6306.send_message("*LRN?").then((result)=>{
@@ -111,6 +113,7 @@ export default function FrontPanel({
           measured_voltage={measured_voltage}
           measured_current={measured_current}
           device_setup={device_setup}
+          toggle_polling={setIsActive}
           callback={change_parameter_from_value}
         />
       </div>

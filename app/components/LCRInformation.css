@@ -1,10 +1,16 @@
 .info_panel1 {
   font-size: large;
 }
-.info_panel2 {
-  font-size: large;
-  height: 100%;
+.info_reading {
+  font-size: 150%;
 }
-.info_panel2_tr {
-  font-size: x-large;
+
+.home_button{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.status_spinner{
+  height: 1em !important;
+  width: 1em !important;
 }

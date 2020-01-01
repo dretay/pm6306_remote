@@ -1,5 +1,7 @@
 {
   "HOME": "/",
   "COUNTER": "/counter",
-  "FRONTPANEL": "/frontpanel"
+  "FRONTPANEL": "/frontpanel",
+  "SYSTEMCONFIG": "/systemconfig",
+  "SWEEPCONFIG": "/sweepconfig"
 }

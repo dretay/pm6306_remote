@@ -10,7 +10,12 @@ type Props = {
 
 function format_dc_bias(dc_bias) {
   if(dc_bias !== undefined){
-    return dc_bias.split(' ')[1];
+    if(isNaN(dc_bias)){
+      return dc_bias.split(' ')[1];
+    }
+    else{
+      return dc_bias;
+    }
   }
   return "";
 }

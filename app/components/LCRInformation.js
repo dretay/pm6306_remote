@@ -17,6 +17,10 @@ import pm6306 from '../utils/pm6306';
 
 import fixture_choices from '../constants/fixtures.json';
 
+import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
+import routes from '../constants/routes.json';
+
 
 function format_voltage(voltage) {
   let voltage_val = Number(voltage);
@@ -40,12 +44,14 @@ type Props = {
   measured_voltage: string,
   measured_current: string,
   device_setup: string,
+  toggle_polling: () => void,
   callback: () => void
 };
 export default function LCRInformation({
   measured_voltage,
   measured_current,
   device_setup,
+  toggle_polling,
   callback
 }: Props) {
   let [
@@ -70,11 +76,39 @@ export default function LCRInformation({
   let formatted_voltage = format_voltage(measured_voltage);
   let formatted_current = format_current(measured_current);
 
+  const [polling_disabled, setPollingDisabled] = useState(false);
+
+  const toggle_sampling = ()=>{
+    if(polling_disabled){
+      toggle_polling(true);
+      setPollingDisabled(false);
+    }
+    else{
+      toggle_polling(false);
+      setPollingDisabled(true);
+    }
+  }
+
+  let polling_status_message = <div><div className={`${styles.status_spinner} spinner-grow`}><span className="sr-only"></span></div>&nbsp;Polling...&nbsp;</div>;
+  let polling_status_style="success";
+  if(polling_disabled){
+    polling_status_style = "light";
+    polling_status_message = "Idle"
+  }
+
+
+
+
   return (
     <>
       <div className={`col-8 p-0`}>
         <div className={`card bg-secondary ${styles.info_panel1}`}>
           <div className="card-header text-center p-0">
+            <Link to={routes.HOME}>
+              <Button className={`${styles.home_button} p-0 float-left`}  variant="warning">
+                &nbsp;<i className="fas fa-arrow-left"></i>&nbsp;
+              </Button>
+            </Link>
             <strong>Acquisition</strong>
           </div>
           <div className="card-body p-0">
@@ -99,25 +133,32 @@ export default function LCRInformation({
       </div>
 
       <div className={`col-4 pl-0 pr-0 `}>
-        <div className={`card bg-secondary ${styles.info_panel2}`}>
-          <div className={`card-body p-0`}>
-            <table className="table table-dark m-0 h-100">
+        <div className={`card bg-secondary ${styles.info_panel2} h-100`}>
+          <div className="card-header text-center p-0">
+
+            <div className="container-fluid">
+              <div className="row justify-content-between">
+                <div className="col-4 pl-0">
+                </div>
+                <div className="col-6 pr-0">
+                  <Button className={`${styles.home_button} p-0 float-right`} onClick={toggle_sampling} variant={polling_status_style}>
+                    {polling_status_message}
+                  </Button>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={`card-body p-0 h-100`}>
+            <table className="table table-dark table-sm m-0 h-100">
               <tbody>
-                <tr className={`${styles.info_panel2_tr}`}>
-                  <td className="align-middle text-center table-dark">
-                    <strong>Voltage</strong>
-                  </td>
-                  <td className="align-middle text-center table-active">
-                    {formatted_voltage}
-                  </td>
+                <tr className={`${styles.info_reading} h-50 `}>
+                  <td className="align-middle">Voltage</td>
+                  <td className="align-middle">{formatted_voltage}</td>
                 </tr>
-                <tr className={`${styles.info_panel2_tr}`}>
-                  <td className="align-middle text-center table-dark">
-                    <strong>Current</strong>
-                  </td>
-                  <td className="align-middle text-center table-active">
-                    {formatted_current}
-                  </td>
+                <tr className={`${styles.info_reading} h-50 `}>
+                  <td className="align-middle">Current</td>
+                  <td className="align-middle">{formatted_current}</td>
                 </tr>
               </tbody>
             </table>

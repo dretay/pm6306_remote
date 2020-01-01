@@ -9,7 +9,10 @@ type Props = {
 
 function format_ac_level(ac_level) {
   if(ac_level !== undefined){
-    let ac_level_val = ac_level.split(' ')[1];
+    let ac_level_val = ac_level;
+    if(isNaN(ac_level)){
+      ac_level_val = ac_level.split(' ')[1];
+    }
     let converted_ac_level = convert(ac_level_val)
       .from('V')
       .toBest();

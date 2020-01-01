@@ -4,12 +4,17 @@ import KeypadModal from '../KeypadModal';
 
 type Props = {
   value: string,
+  label: string,
   callback: () => void
 };
 
 function format_frequency(frequency) {
   if(frequency !== undefined){
-    let frequency_val = frequency.split(' ')[1];
+    let frequency_val = frequency;
+    if(isNaN(frequency)){
+      frequency_val = frequency.split(' ')[1];
+    }
+
     let converted_frequency = convert(frequency_val)
       .from('Hz')
       .toBest();
@@ -23,13 +28,14 @@ function format_frequency(frequency) {
 
 export default function Frequency({
   value,
+  label="Frequency",
   callback
 }: Props) {
   let formatted_value = format_frequency(value);
   return (
     <>
       <td className="text-center table-dark">
-        <strong>Frequency</strong>
+        <strong>{label}</strong>
       </td>
       <td className="text-center table-active">
         <KeypadModal command="FRE" button_label={formatted_value} callback={callback} />
