@@ -90,14 +90,9 @@ export default function LCRInformation({
   }
 
   let polling_status_message = <div><div className={`${styles.status_spinner} spinner-grow`}><span className="sr-only"></span></div>&nbsp;Polling...&nbsp;</div>;
-  let polling_status_style="success";
   if(polling_disabled){
-    polling_status_style = "light";
     polling_status_message = "Idle"
   }
-
-
-
 
   return (
     <>
@@ -109,7 +104,6 @@ export default function LCRInformation({
                 &nbsp;<i className="fas fa-arrow-left"></i>&nbsp;
               </Button>
             </Link>
-            <strong>Acquisition</strong>
           </div>
           <div className="card-body p-0">
             <table className="table table-dark table-sm m-0">

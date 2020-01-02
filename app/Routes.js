@@ -7,6 +7,7 @@ import CounterPage from './containers/CounterPage';
 import FrontPanelPage from './containers/FrontPanelPage';
 import SystemPanelPage from './containers/SystemPanelPage';
 import SweepPanelPage from './containers/SweepPanelPage';
+import SweepViewerPage from './containers/SweepViewerPage';
 
 export default () => (
   <App>
@@ -16,6 +17,7 @@ export default () => (
       <Route path={routes.FRONTPANEL} component={FrontPanelPage} />
       <Route path={routes.SYSTEMCONFIG} component={SystemPanelPage} />
       <Route path={routes.SWEEPCONFIG} component={SweepPanelPage} />
+      <Route path={routes.SWEEPVIEWER} component={SweepViewerPage} />
     </Switch>
   </App>
 );

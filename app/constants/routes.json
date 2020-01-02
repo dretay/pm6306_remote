@@ -3,5 +3,6 @@
   "COUNTER": "/counter",
   "FRONTPANEL": "/frontpanel",
   "SYSTEMCONFIG": "/systemconfig",
-  "SWEEPCONFIG": "/sweepconfig"
+  "SWEEPCONFIG": "/sweepconfig",
+  "SWEEPVIEWER": "/sweepviewer"
 }

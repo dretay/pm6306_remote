@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import SweepPanel from '../components/SweepPanel';
-import * as SweepPanelActions from '../actions/sweeppanel';
+import SweepViewer from '../components/SweepViewer';
+import * as SweepViewerActions from '../actions/sweepviewer';
 
 function mapStateToProps(state) {
   return {
@@ -10,10 +10,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(SweepPanelActions, dispatch);
+  return bindActionCreators(SweepViewerActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SweepPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(SweepViewer);
 
 // import React, { Component } from 'react';
 // import Home from '../components/FrontPanel';

@@ -1,0 +1,11 @@
+.paramter_table{
+  min-height: 100vh;
+}
+.footer_nav{
+  bottom: 0;
+  position: absolute;
+  padding-bottom: 10px;
+}
+.nav_button{
+  font-size: x-large;
+}

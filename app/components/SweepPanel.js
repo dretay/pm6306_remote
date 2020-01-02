@@ -44,13 +44,14 @@ export default function SweepPanel({
   }
 
   return (
-    <div className="container-fluid">
+  <>
+    <div className={`container-fluid ${styles.paramter_table}`}>
       <div className="row">
         <table className="table table-dark table-sm m-0">
           <tbody>
             <tr>
               <td>
-                <Dropdown drop="dropdown" className={`p-0 `}>
+                <Dropdown drop="down" className={`p-0 `}>
                   <Dropdown.Toggle variant="dark" className={`p-0 dropdown`}>
                     TODO Primary
                   </Dropdown.Toggle>
@@ -62,7 +63,7 @@ export default function SweepPanel({
             </tr>
             <tr>
               <td>
-                <Dropdown drop="dropdown" className={`p-0 `}>
+                <Dropdown drop="down" className={`p-0 `}>
                   <Dropdown.Toggle variant="dark" className={`p-0 dropdown`}>
                     TODO Secondary
                   </Dropdown.Toggle>
@@ -73,23 +74,55 @@ export default function SweepPanel({
               </td>
             </tr>
             <tr>
-              <td><Frequency label="Start Frequency" value={start_frequency} callback={callback}/></td>
+              <Frequency label="Start Frequency" value={start_frequency} callback={callback}/>
             </tr>
             <tr>
-              <td><Frequency label="Stop Frequency" value={stop_frequency} callback={callback}/></td>
+              <Frequency label="Stop Frequency" value={stop_frequency} callback={callback}/>
             </tr>
             <tr>
-              <td><ACLevel value={ac_level} callback={callback}/></td>
+              <ACLevel value={ac_level} callback={callback}/>
             </tr>
             <tr>
-              <td><DCBias value={dc_bias} callback={callback}/></td>
+              <DCBias value={dc_bias} callback={callback}/>
             </tr>
             <tr>
-              <td><KeypadModal command="FRE" button_label="Steps" callback={callback} /></td>
+              <td><KeypadModal command="FRE" button_label="Step Size" callback={callback} /></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+    <footer className={`footer ${styles.footer_nav} w-100`}>
+      <div className="container-fluid w-100">
+        <div className="d-flex">
+            <div>
+              <Link to={routes.SWEEPCONFIG}>
+                <Button className={`float-left ${styles.nav_button}`}  variant="warning">
+                  Back
+                </Button>
+              </Link>
+            </div>
+            <div className="ml-auto">
+              <Link to={{
+                pathname: routes.SWEEPVIEWER,
+                state:{
+                  primaryComponent: "OFF",
+                  secondaryComponent: "AUTO",
+                  startFrequency: 1000,
+                  stopFrequency: 10000,
+                  acLevel: "1",
+                  dcBias: 0,
+                  stepSize: 100
+                }
+              }}>
+                <Button className={`float-right ${styles.nav_button}`}  variant="success">
+                  Start
+                </Button>
+              </Link>
+            </div>
+        </div>
+      </div>
+    </footer>
+  </>
   );
 }
