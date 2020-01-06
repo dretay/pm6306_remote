@@ -1,0 +1,11 @@
+.chart_panel{
+  padding-top: 30px;
+}
+.footer_nav{
+  bottom: 0;
+  position: absolute;
+  padding-bottom: 10px;
+}
+.nav_button{
+  font-size: x-large;
+}

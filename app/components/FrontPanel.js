@@ -28,35 +28,30 @@ export default function FrontPanel({
   const toggle_polling = (value)=>{
     setIsActive(value);
   }
-  const get_device_setup = () => {
-    setIsActive(false);
-    return pm6306.send_message("*LRN?").then((result)=>{
-      setTimeout(()=>{
-        setDeviceSetup(result);
-        setIsActive(true);
-      },500);
-    });
-  };
-  const change_parameter_from_event = (e) => {
-    setIsActive(false);
-    pm6306.send_message(e.target.getAttribute("value")).then(()=>{
-      get_device_setup().then(()=>{
-        setTimeout(()=>{
-          setIsActive(true);
-        },500);
-      });
-    });
-  };
-  const change_parameter_from_value = (value)=>{
-    setIsActive(false);
-    pm6306.send_message(value).then(()=>{
-      get_device_setup().then(()=>{
-        setTimeout(()=>{
-          setIsActive(true);
-        },500);
-      });
-    });
+  function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
+  async function get_device_setup() {
+    setIsActive(false);
+    let data = await pm6306.send_message("*LRN?");
+    setDeviceSetup(data);
+    await sleep(100);
+    setIsActive(true);
+  };
+  async function change_parameter_from_event(e){
+    setIsActive(false);
+    await pm6306.send_message(e.target.getAttribute("value"));
+    await get_device_setup();
+  };
+  async function change_parameter_from_value(value){
+    setIsActive(false);
+    await pm6306.send_message(value);
+    await get_device_setup();
+  }
+  useEffect(() => {
+    pm6306.send_message(`CONTIN`);
+  },[]);
+
   useEffect(() => {
     let timerID = null;
     if(isActive){

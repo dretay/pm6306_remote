@@ -5,7 +5,6 @@ const Queue = require('promise-queue');
 const delimiter = "\n";
 const path = "/dev/ttyUSB0";
 
-
 const SPECIAL_CMD_ESC = String.fromCharCode(27);
 const SPECIAL_CMD_GO_LOCAL = `${SPECIAL_CMD_ESC}1`;
 const SPECIAL_CMD_GO_REMOTE = `${SPECIAL_CMD_ESC}2`;
@@ -19,6 +18,7 @@ const RESET_CMD = "*RST";
 const STANDARD_EVENT_ENABLE_CMD = "*ESE";
 const READ_STATUS_BYTE_QUERY = "*STB?";
 const IDENTIFICATION_CMD = "*IDN?";
+const ERROR_QUERY_CMD = "err?";
 const metadata = {
   LCR_METER_READY: false
 }
@@ -65,7 +65,7 @@ class PM6306 {
       query += delimiter;
     }
 
-    // console.log(`->${JSON.stringify(query)}`);
+    // console.log(`->${JSON.stringify(query)} (${is_query})`);
     this.port.write(query);
     if(is_query){
       return new Promise(resolve =>{
@@ -91,13 +91,15 @@ class PM6306 {
     let status = await this.send_command(READ_STATUS_BYTE_QUERY);
 
     if(status == 32){
-      throw status;
+      let error = await this.send_command(ERROR_QUERY_CMD);
+      throw error;
     }
     return data;
   }
   send_message (command){
-
-    return this.queue.add(()=> this._send_message(command));
+    return this.queue.add(()=> this._send_message(command).catch((error)=>{
+      console.log(error);
+    }));
   }
 }
 

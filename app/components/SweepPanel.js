@@ -96,7 +96,7 @@ export default function SweepPanel({
       <div className="container-fluid w-100">
         <div className="d-flex">
             <div>
-              <Link to={routes.SWEEPCONFIG}>
+              <Link to={routes.HOME}>
                 <Button className={`float-left ${styles.nav_button}`}  variant="warning">
                   Back
                 </Button>
@@ -106,13 +106,13 @@ export default function SweepPanel({
               <Link to={{
                 pathname: routes.SWEEPVIEWER,
                 state:{
-                  primaryComponent: "OFF",
+                  primaryComponent: "C",
                   secondaryComponent: "AUTO",
                   startFrequency: 1000,
                   stopFrequency: 10000,
                   acLevel: "1",
                   dcBias: 0,
-                  stepSize: 100
+                  stepSize: 1000
                 }
               }}>
                 <Button className={`float-right ${styles.nav_button}`}  variant="success">

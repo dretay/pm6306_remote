@@ -1,14 +1,13 @@
 import React, { useState,useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import pm6306 from '../utils/pm6306';
-import styles from './SweepPanel.css';
+import styles from './SweepViewer.css';
+import {format_component, extract_readings_from_response} from '../utils/lcrreading'
 
 import {exec} from 'child_process';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
-
-import { Line } from 'react-chartjs-2';
-import 'chartjs-plugin-streaming';
+import SweepChart from './SweepChart'
 
 type Props = {
   location: object
@@ -17,65 +16,110 @@ export default function SweepPanel({
   location
 }: Props) {
 
-  if(location.state !== undefined){
-    const {
-      primaryComponent,
-      secondaryComponent,
-      startFrequency,
-      stopFrequency,
-      acLevel,
-      dcBias,
-      stepSize
-    } = location.state;
-  }
-  const [data, setData] = useState([
-    {x: Date.now(), y: Math.random()},
-    {x: Date.now(), y: Math.random()},
-    {x: Date.now(), y: Math.random()},
-    {x: Date.now(), y: Math.random()},
-    {x: Date.now(), y: Math.random()}
-  ]);
-  // pm6306.send_message(`POSITION_FIX ${primaryComponent}`);
-  // pm6306.send_message(`PARAM ${secondaryComponent}`);
-  // pm6306.send_message(`AC_LEV ${acLevel}`);
-  // pm6306.send_message(`BIAS_VOLTAGE ${dcBias}`);
-  const options = {
-    responsive: true,
-    tooltips: {
-      mode: 'label'
-    },
-    elements: {
-      line: {
-        fill: false,
-        lineTension: 0
-      }
-    },
-    scales: {
-      yAxes: [
-        {
-          tics: { min: 0 }
-        }
-      ]
-    },
-    legend: {
-      display: true,
-      position: 'bottom',
-      reverse: true,
-      onClick: null
+
+
+  const [primaryComponentData, setPrimaryComponentData] = useState([]);
+  const [secondaryComponentData, setSecondaryComponentData] = useState([]);
+  const [isActive, setIsActive] = useState(true);
+  const [currFrequency, setCurrFrequency] = useState(0);
+  const [stopFrequency, setStopFrequency] = useState(0);
+  const [stepSize, setStepSize] = useState(0);
+  const [stopSweep, setStopSweep] = useState(true);
+
+  useEffect(() => {
+    if(currFrequency === 0){
+      const {
+        primaryComponent,
+        secondaryComponent,
+        startFrequency,
+        stopFrequency,
+        acLevel,
+        dcBias,
+        stepSize
+      } = location.state;
+      Promise.all([
+        pm6306.send_message(`POSITION_FIX ${primaryComponent}`),
+        pm6306.send_message(`PARAM ${secondaryComponent}`),
+        pm6306.send_message(`AC_LEV ${acLevel}`),
+        pm6306.send_message(`BIAS_VOLTAGE ${dcBias}`),
+        pm6306.send_message(`FRE ${startFrequency}`),
+        pm6306.send_message(`SINGLE`),
+        pm6306.send_message(`SET_FIXTURE 3`),
+      ]).then(()=>{
+        setCurrFrequency(startFrequency);
+        setStopFrequency(stopFrequency);
+        setStepSize(stepSize);
+        setStopSweep(false);
+      });
     }
-  };
-  const Chart = ({ data }) => {
-    const config = {
-      // labels: labels,
-      datasets: [{data: data}]
-    };
-    return <Line data={config} options={options} />;
-  };
+  },[location, isActive, currFrequency, stopFrequency, stepSize, stopSweep]);
+
+  useEffect(() => {
+    let timerID = null;
+
+    if(isActive && !stopSweep){
+      timerID = setInterval(()=>{
+        setIsActive(false);
+        pm6306.send_message('TRIG;*OPC?').then(result => {
+          if(result == Number(1)){
+            pm6306.send_message('COMP?').then(result => {
+              const regexp = /((\w)\s([0-9-E\.]+)|over)/g;
+              const results = [...result.matchAll(regexp)];
+              let {primary, secondary} = extract_readings_from_response(result);
+              let progress = document.getElementById('animationProgress');
+              progress.value = currFrequency / stopFrequency;
+              setPrimaryComponentData([
+                ...primaryComponentData,
+                {
+                  x: currFrequency,
+                  y: primary.rounded_val
+                }
+              ]);
+              setSecondaryComponentData([
+                ...secondaryComponentData,
+                {
+                  x: currFrequency,
+                  y: secondary.rounded_val
+                }
+              ]);
+              if(currFrequency + stepSize <= stopFrequency){
+                setCurrFrequency(currFrequency+stepSize);
+                pm6306.send_message(`FRE ${currFrequency+stepSize}`).then(()=>{
+                  setIsActive(true);
+                });
+              }
+              else{
+                progress.style.display = "none";
+              }
+            });
+          }
+          else{
+            console.log("error retrieving result from query");
+          }
+        });
+      }, 100);
+    }
+    else if(!isActive){
+      clearInterval(timerID);
+    }
+    return () => clearInterval(timerID);
+
+  },[isActive, currFrequency, primaryComponentData, secondaryComponentData, stopSweep]);
+
+  let manuallyStopSweep = ()=>{
+    setStopSweep(true);
+  }
 
   return (
   <>
-    <div className={`container-fluid ${styles.paramter_table}`}>
-      <Chart data={data} />
+    <div className={`container-fluid ${styles.chart_panel}`}>
+      <SweepChart
+        primaryComponentData={primaryComponentData}
+        primaryComponentLabel="Capacitance"
+        secondaryComponentData={secondaryComponentData}
+        secondaryComponentLabel="Resistance"
+      />
+      <progress id="animationProgress" max="1" value="0" className="w-100"></progress>
     </div>
     <footer className={`footer ${styles.footer_nav} w-100`}>
       <div className="container-fluid w-100">
@@ -88,8 +132,8 @@ export default function SweepPanel({
               </Link>
             </div>
             <div className="ml-auto">
-              <Button className={`float-right ${styles.nav_button}`}  variant="success">
-                Start
+              <Button className={`float-right ${styles.nav_button}`} onClick={manuallyStopSweep} variant="danger" disabled={stopSweep || (currFrequency == stopFrequency)}>
+                Stop
               </Button>
             </div>
         </div>

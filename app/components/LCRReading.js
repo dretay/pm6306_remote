@@ -8,6 +8,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Card from 'react-bootstrap/Card';
 import styles from './LCRReading.css';
 
+import format_component from '../utils/lcrreading'
+
 
 var convert = require('convert-units')
 
@@ -20,40 +22,7 @@ type Props = {
   callback: () => void
 };
 
-function format_component(parameter, value){
-  let converted = null;
-  let units = null;
-  switch(parameter){
-    case "R":
-    case "Z":
-      converted = convert(Number(value)).from('Ohm').toBest();
-      units = converted.singular;
-      break;
-    case "L":
-      converted = convert(Number(value)).from('H').toBest({reverse:true, maxNumber: 1000});
-      units = converted.unit;
-      break;
-    case "C":
-      converted = convert(Number(value)).from('farad').toBest({reverse:true, maxNumber: 1000});
-      units = converted.unit;
-      break;
-    case "Q":
-      converted = {val:value};
-      units = "";
-    case "D":
-      converted = {val:value};
-      units = "";
-      break;
-    case "p":
-      converted = {val:value};
-      units = "deg";
-      break;
-    default:
-      return '---'
-  }
-  let rounded_val = Math.round(converted.val * 1000) / 1000;
-  return `${rounded_val} ${units}`;
-}
+
 
 export default function PopoverChooser({
   options,
@@ -71,7 +40,7 @@ export default function PopoverChooser({
   }
 
 
-  let formatted_reading = format_component(parameter, value);
+  let {label: formatted_reading} = format_component(parameter, value);
   if(parameter === "p"){
     parameter = "Ø";
   }
