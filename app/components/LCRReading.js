@@ -35,8 +35,24 @@ export default function PopoverChooser({
 
   const items = []
 
+  const prepare_callback = e =>{
+    let command = e.target.getAttribute("command") || "";
+    let argument = e.target.getAttribute("argument") || "";
+    callback(command, argument);
+  }
+
+
   for (const [index, value] of options.entries()) {
-    items.push(<Dropdown.Item className={`${styles.dropdown_item}`} key={shortid.generate()} value={value.command} onClick={callback}> {value.label} </Dropdown.Item>);
+    items.push(
+      <Dropdown.Item
+        className={`${styles.dropdown_item}`}
+        key={shortid.generate()}
+        command={value.command}
+        argument={value.argument}
+        onClick={prepare_callback}>
+        {value.label}
+      </Dropdown.Item>
+    );
   }
 
 

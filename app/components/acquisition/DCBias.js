@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 let convert = require('convert-units');
 import PopoverChooser from '../PopoverChooser';
 import dc_bias_choices from '../../constants/dc_bias.json';
+import * as _ from 'underscore';
 
 type Props = {
   value: string,
@@ -10,12 +11,12 @@ type Props = {
 
 function format_dc_bias(dc_bias) {
   if(dc_bias !== undefined){
-    if(isNaN(dc_bias)){
-      return dc_bias.split(' ')[1];
+    if(_.isString(dc_bias)){
+      if(dc_bias.includes("DC_BIAS")){
+        return dc_bias.split(' ')[1];
+      }
     }
-    else{
-      return dc_bias;
-    }
+    return dc_bias;
   }
   return "";
 }

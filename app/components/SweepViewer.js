@@ -35,16 +35,17 @@ export default function SweepPanel({
         stopFrequency,
         acLevel,
         dcBias,
+        biasVoltage,
         stepSize
       } = location.state;
       Promise.all([
         pm6306.send_message(`POSITION_FIX ${primaryComponent}`),
         pm6306.send_message(`PARAM ${secondaryComponent}`),
         pm6306.send_message(`AC_LEV ${acLevel}`),
-        pm6306.send_message(`BIAS_VOLTAGE ${dcBias}`),
+        pm6306.send_message(`DC_BIAS ${dcBias}`),
+        pm6306.send_message(`BIAS_VOLTAGE ${biasVoltage}`),
         pm6306.send_message(`FRE ${startFrequency}`),
         pm6306.send_message(`SINGLE`),
-        pm6306.send_message(`SET_FIXTURE 3`),
       ]).then(()=>{
         setCurrFrequency(startFrequency);
         setStopFrequency(stopFrequency);
@@ -72,14 +73,16 @@ export default function SweepPanel({
                 ...primaryComponentData,
                 {
                   x: currFrequency,
-                  y: primary.rounded_val
+                  y: primary.raw,
+                  parameter: primary.parameter
                 }
               ]);
               setSecondaryComponentData([
                 ...secondaryComponentData,
                 {
                   x: currFrequency,
-                  y: secondary.rounded_val
+                  y: secondary.raw,
+                  parameter: secondary.parameter
                 }
               ]);
               if(currFrequency + stepSize <= stopFrequency){
@@ -115,9 +118,7 @@ export default function SweepPanel({
     <div className={`container-fluid ${styles.chart_panel}`}>
       <SweepChart
         primaryComponentData={primaryComponentData}
-        primaryComponentLabel="Capacitance"
         secondaryComponentData={secondaryComponentData}
-        secondaryComponentLabel="Resistance"
       />
       <progress id="animationProgress" max="1" value="0" className="w-100"></progress>
     </div>

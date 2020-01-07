@@ -25,14 +25,24 @@ export default function DropdownChooser({
     setTarget(event.target);
   };
   const prepare_callback = e =>{
-    let value = e.target.getAttribute("value")
-    callback(value);
+    let command = e.target.getAttribute("command") || "";
+    let argument = e.target.getAttribute("argument") || "";
+    callback(command, argument);
   }
 
   const items = []
 
   for (const [index, value] of values.entries()) {
-    items.push(<Dropdown.Item className={`${styles.dropdown_item}`} key={shortid.generate()} value={value.command} onClick={prepare_callback}>{value.label}</Dropdown.Item> );
+    items.push(
+      <Dropdown.Item
+        className={`${styles.dropdown_item}`}
+        key={shortid.generate()}
+        command={value.command}
+        argument={value.argument}
+        onClick={prepare_callback}>
+        {value.label}
+      </Dropdown.Item>
+    );
   }
 
   return (

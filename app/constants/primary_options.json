@@ -1,7 +1,7 @@
 [
-  { "label": "Resistance", "command": "POSITION_FIX R" },
-  { "label": "Capacitance", "command": "POSITION_FIX C" },
-  { "label": "Inducatance", "command": "POSITION_FIX L" },
-  { "label": "Capacitance or Inducance", "command": "POSITION_FIX CL" },
-  { "label": "Manual Off", "command": "POSITION_FIX OFF" }
+  { "label": "Resistance", "command": "POSITION_FIX", "argument": "R" },
+  { "label": "Capacitance", "command": "POSITION_FIX", "argument": "C" },
+  { "label": "Inducatance", "command": "POSITION_FIX", "argument": "L" },
+  { "label": "Capacitance or Inducance", "command": "POSITION_FIX", "argument": "CL" },
+  { "label": "Manual Off", "command": "POSITION_FIX", "argument": "OFF" }
 ]

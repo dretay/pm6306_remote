@@ -3,19 +3,19 @@ import { Line, Scatter } from 'react-chartjs-2';
 import 'chartjs-plugin-streaming';
 import get_colors from '../utils/bootstrap_colors';
 const convert = require('convert-units');
+import * as _ from 'underscore';
+import format_component from '../utils/lcrreading'
 
+let primary_parameter = null;
+let secondary_parameter = null;
 
 type Props = {
   primaryComponentData: Array,
-  primaryComponentLabel: string,
   secondaryComponentData: Array,
-  secondaryComponentLabel: string
 };
 export default function SweepChart({
   primaryComponentData,
-  primaryComponentLabel,
   secondaryComponentData,
-  secondaryComponentLabel
 }: Props) {
   const theme = get_colors();
 
@@ -51,11 +51,7 @@ export default function SweepChart({
       }],
       yAxes: [{
         scaleLabel: {
-          labelString: primaryComponentLabel,
-          display: true,
-          fontSize: 18,
-          fontColor: theme.success,
-          fontStyle: "bold"
+          display: false,
         },
         position: 'left',
         id: 'primary-component',
@@ -64,17 +60,22 @@ export default function SweepChart({
           zeroLineColor: 'rgba(255, 255, 255, 0.5)'
         },
         ticks: {
-          fontColor: "white",
-          fontSize: 18
+          fontColor: theme.success,
+          fontSize: 18,
+          callback: (value, index, values)=> {
+            if(_.isArray(primaryComponentData) && primaryComponentData.hasOwnProperty(index)){
+              primary_parameter = primaryComponentData[index].parameter;
+            }
+            if(!_.isNull(primary_parameter)){
+              return format_component(primary_parameter,value).label;
+            }
+            return value;
+          }
         }
       },
       {
         scaleLabel: {
-          labelString: secondaryComponentLabel,
-          display: true,
-          fontSize: 18,
-          fontColor: theme.info,
-          fontStyle: "bold"
+          display: false,
         },
         position: 'right',
         id: 'secondary-component',
@@ -83,8 +84,17 @@ export default function SweepChart({
           zeroLineColor: 'rgba(255, 255, 255, 0.5)'
         },
         ticks: {
-          fontColor: "white",
-          fontSize: 18
+          fontColor: theme.info,
+          fontSize: 18,
+          callback: (value, index, values)=> {
+            if(_.isArray(secondaryComponentData) && secondaryComponentData.hasOwnProperty(index)){
+              secondary_parameter = secondaryComponentData[index].parameter;
+            }
+            if(!_.isNull(secondary_parameter)){
+              return format_component(secondary_parameter,value).label;
+            }
+            return value;
+          }
         }
       }],
     },
@@ -105,18 +115,18 @@ export default function SweepChart({
       {
         borderColor: theme.success,
         backgroundColor: theme.success,
-        label: "Capacitance",
         data: primaryComponentData,
         showLine: true,
         yAxisID: 'primary-component',
+        label: 'primary-component',
       },
       {
         borderColor: theme.info,
         backgroundColor: theme.info,
-        label: "Resistance",
         data: secondaryComponentData,
         showLine: true,
         yAxisID: 'secondary-component',
+        label: 'secondary-component',
       }
     ],
     options: options,

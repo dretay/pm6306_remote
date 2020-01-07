@@ -28,15 +28,26 @@ export default function PopoverChooser({
     setTarget(event.target);
   };
   const prepare_callback = e =>{
-    let value = e.target.getAttribute("value")
-    callback(value);
+    let command = e.target.getAttribute("command")
+    let argument = e.target.getAttribute("argument")
+    callback(command, argument);
     setShow(!show);
   }
 
   const items = []
 
   for (const [index, value] of values.entries()) {
-    items.push(<Button key={shortid.generate()} variant={value.variant} value={value.command} className={`btn ${styles.popover_btn}`} onClick={prepare_callback}> {value.label} </Button>);
+    items.push(
+      <Button
+        key={shortid.generate()}
+        variant={value.variant}
+        command={value.command}
+        argument={value.argument}
+        className={`btn ${styles.popover_btn}`}
+        onClick={prepare_callback}>
+        {value.label}
+      </Button>
+    );
   }
 
   return (

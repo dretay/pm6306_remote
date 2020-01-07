@@ -20,7 +20,7 @@ export default function KeypadModal({ command, button_label, callback }: Props) 
     setShow(false);
   }
   const handle_enter = () => {
-    callback(`${command} ${value}`);
+    callback(command, value);
     setShow(false);
   };
   const handle_show = () => {

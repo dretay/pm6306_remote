@@ -1,8 +1,8 @@
 [
-  { "label": "Quality", "command": "PARAM QUALITY" },
-  { "label": "Dissipation", "command": "PARAM DISSIPATION" },
-  { "label": "Phase", "command": "PARAM PHASE" },
-  { "label": "Impedance", "command": "PARAM IMPEDANCE" },
-  { "label": "AUTO", "command": "PARAM AUTO" }
+  { "label": "Quality", "command": "PARAM", "argument": "QUALITY" },
+  { "label": "Dissipation", "command": "PARAM", "argument": "DISSIPATION" },
+  { "label": "Phase", "command": "PARAM", "argument": "PHASE" },
+  { "label": "Impedance", "command": "PARAM","argument": "IMPEDANCE" },
+  { "label": "AUTO", "command": "PARAM","argument": "AUTO" }
 
 ]

@@ -35,7 +35,9 @@ export default function format_component(parameter, value){
     label: `${rounded_val} ${units}`,
     rounded_val: rounded_val,
     units: units,
-    converted: converted
+    converted: converted,
+    parameter: parameter,
+    raw: value
   }
 }
 

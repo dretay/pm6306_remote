@@ -38,14 +38,10 @@ export default function FrontPanel({
     await sleep(100);
     setIsActive(true);
   };
-  async function change_parameter_from_event(e){
+
+  async function change_parameter(command, value=""){
     setIsActive(false);
-    await pm6306.send_message(e.target.getAttribute("value"));
-    await get_device_setup();
-  };
-  async function change_parameter_from_value(value){
-    setIsActive(false);
-    await pm6306.send_message(value);
+    await pm6306.send_message(`${command} ${value}`);
     await get_device_setup();
   }
   useEffect(() => {
@@ -109,7 +105,7 @@ export default function FrontPanel({
           measured_current={measured_current}
           device_setup={device_setup}
           toggle_polling={setIsActive}
-          callback={change_parameter_from_value}
+          callback={change_parameter}
         />
       </div>
       <div className="row">
@@ -119,7 +115,7 @@ export default function FrontPanel({
           options={primary_options}
           dropdir="right"
           variant="text-success"
-          callback={change_parameter_from_event}
+          callback={change_parameter}
         />
       </div>
       <div className="row">
@@ -129,7 +125,7 @@ export default function FrontPanel({
           options={secondary_options}
           dropdir="up"
           variant="text-info"
-          callback={change_parameter_from_event}
+          callback={change_parameter}
         />
       </div>
     </div>

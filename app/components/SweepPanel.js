@@ -25,35 +25,85 @@ type Props = {
 export default function SweepPanel({
 }: Props) {
 
-  const [start_frequency, setStartFrequency] = useState(1000);
-  const [stop_frequency, setStopFrequency] = useState(10000);
+  const [primary_component, setPrimaryComponent] = useState("C");
+  const [secondary_component, setSecondaryComponent] = useState("IMPEDANCE");
+  const [start_frequency, setStartFrequency] = useState(100);
+  const [stop_frequency, setStopFrequency] = useState(1000);
   const [ac_level, setAcLevel] = useState(1);
-  const [dc_bias, setDcBias] = useState(0);
+  const [dc_bias, setDcBias] = useState("OFF");
+  const [bias_voltage, setBiasVoltage] = useState(0);
+  const [step_size, setStepSize] = useState(100);
 
-  let callback = ()=>{
+  let set_primary_callback = (e)=>{
+    let argument = e.target.getAttribute("argument") || "";
+    setPrimaryComponent(argument);
+  }
+  let set_secondary_callback = (e)=>{
+    let argument = e.target.getAttribute("argument") || "";
+    setSecondaryComponent(argument);
+  }
+  let set_start_frequency_callback = (command, value)=>{
+    setStartFrequency(value);
+  }
+  let set_stop_frequency_callback = (command, value)=>{
+    setStopFrequency(value);
+  }
+  let set_ac_level_callback = (command, value)=>{
+    setAcLevel(value);
+  }
 
+  let set_dc_bias_callback = (command, value)=>{
+    setDcBias(value);
+  }
+  let set_bias_voltage_callback = (command, value)=>{
+    setBiasVolgate(value);
+  }
+  let set_step_size_callback = (command, value)=>{
+    setStepSize(Number(value));
   }
   const primary_dropdown_values = []
   for (const [index, value] of primary_options.entries()) {
-    primary_dropdown_values.push(<Dropdown.Item className={``} key={shortid.generate()} value={value.command} onClick={callback}> {value.label} </Dropdown.Item>);
+    primary_dropdown_values.push(
+      <Dropdown.Item
+        className={``}
+        key={shortid.generate()}
+        command={value.command}
+        argument={value.argument}
+        onClick={set_primary_callback}>
+        {value.label}
+      </Dropdown.Item>
+    );
   }
+
 
   const secondary_dropdown_values = []
   for (const [index, value] of secondary_options.entries()) {
-    secondary_dropdown_values.push(<Dropdown.Item className={``} key={shortid.generate()} value={value.command} onClick={callback}> {value.label} </Dropdown.Item>);
+    secondary_dropdown_values.push(
+      <Dropdown.Item
+        className={``}
+        key={shortid.generate()}
+        command={value.command}
+        argument={value.argument}
+        onClick={set_secondary_callback}>
+        {value.label}
+      </Dropdown.Item>
+    );
   }
 
   return (
   <>
     <div className={`container-fluid ${styles.paramter_table}`}>
       <div className="row">
-        <table className="table table-dark table-sm m-0">
+        <table className="table table-dark table-sm m-0 text-center">
           <tbody>
             <tr>
               <td>
+                <strong>Primary</strong>
+              </td>
+              <td>
                 <Dropdown drop="down" className={`p-0 `}>
                   <Dropdown.Toggle variant="dark" className={`p-0 dropdown`}>
-                    TODO Primary
+                    {primary_component}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     {primary_dropdown_values}
@@ -63,9 +113,12 @@ export default function SweepPanel({
             </tr>
             <tr>
               <td>
+                <strong>Secondary</strong>
+              </td>
+              <td>
                 <Dropdown drop="down" className={`p-0 `}>
                   <Dropdown.Toggle variant="dark" className={`p-0 dropdown`}>
-                    TODO Secondary
+                    {secondary_component}
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     {secondary_dropdown_values}
@@ -74,19 +127,23 @@ export default function SweepPanel({
               </td>
             </tr>
             <tr>
-              <Frequency label="Start Frequency" value={start_frequency} callback={callback}/>
+              <Frequency label="Start Frequency" value={start_frequency} callback={set_start_frequency_callback}/>
             </tr>
             <tr>
-              <Frequency label="Stop Frequency" value={stop_frequency} callback={callback}/>
+              <Frequency label="Stop Frequency" value={stop_frequency} callback={set_stop_frequency_callback}/>
             </tr>
             <tr>
-              <ACLevel value={ac_level} callback={callback}/>
+              <ACLevel value={ac_level} callback={set_ac_level_callback}/>
             </tr>
             <tr>
-              <DCBias value={dc_bias} callback={callback}/>
+              <DCBias value={dc_bias} callback={set_dc_bias_callback}/>
             </tr>
             <tr>
-              <td><KeypadModal command="FRE" button_label="Step Size" callback={callback} /></td>
+              <BiasVoltage value={bias_voltage} callback={set_bias_voltage_callback}/>
+            </tr>
+            <tr>
+            <td><strong>Step Size</strong></td>
+              <td><KeypadModal command="FRE" button_label={step_size} callback={set_step_size_callback} /></td>
             </tr>
           </tbody>
         </table>
@@ -106,13 +163,14 @@ export default function SweepPanel({
               <Link to={{
                 pathname: routes.SWEEPVIEWER,
                 state:{
-                  primaryComponent: "C",
-                  secondaryComponent: "AUTO",
-                  startFrequency: 1000,
-                  stopFrequency: 10000,
-                  acLevel: "1",
-                  dcBias: 0,
-                  stepSize: 1000
+                  primaryComponent: primary_component,
+                  secondaryComponent: secondary_component,
+                  startFrequency: start_frequency,
+                  stopFrequency: stop_frequency,
+                  acLevel: ac_level,
+                  dcBias: dc_bias,
+                  biasVoltage: bias_voltage,
+                  stepSize: step_size
                 }
               }}>
                 <Button className={`float-right ${styles.nav_button}`}  variant="success">

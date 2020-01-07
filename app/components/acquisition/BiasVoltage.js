@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 let convert = require('convert-units');
 import KeypadModal from '../KeypadModal';
+import * as _ from 'underscore';
 
 type Props = {
   value: string,
@@ -8,8 +9,14 @@ type Props = {
 };
 
 function format_bias_voltage(dc_bias) {
+  let dc_bias_val = 0;
   if(dc_bias!== undefined){
-    let dc_bias_val = dc_bias.split(' ')[1];
+    if(_.isString(dc_bias)){
+      dc_bias_val = dc_bias.split(' ')[1];
+    }
+    else if(_.isNumber(dc_bias)){
+      dc_bias_val = dc_bias;
+    }
     let converted_dc_bias = convert(dc_bias_val)
       .from('V')
       .toBest();
