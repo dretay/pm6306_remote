@@ -14,7 +14,7 @@ on this device that significantly expands the utility of the base unit.
   - Shows currently measured voltage and current in addition to primary and secondary component readings
   - Allows entering numeric values (frequency and voltages) through an on-screen keypad for quicker setup
   - Allows selection of primary and secondary measurement parameters through on-screen dropdowns
-- (Planned) graphical ability to sweep frequency response for a component
+- Graphical ability to sweep frequency response for a component <img src="https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4608.jpg" align="right" width="208">
 - (Planned) graphical ability to bin components based on tolerances
 
 ### Build Instructions ###
