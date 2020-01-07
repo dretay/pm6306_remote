@@ -1,7 +1,7 @@
 
 # PM630X User Interface
 
-<img src="https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4582.jpg" align="right" width="208">
+
 
 > An Electron-based user interface for PM630X LCR meters
 
@@ -10,7 +10,7 @@ The Fluke / Philips PM630X line of LCR meters were a line of benchtop equipment 
 on this device that significantly expands the utility of the base unit. 
 
 ### Main Features ###
-- Redesigned modern UI for displaying measured component values
+- Redesigned modern UI for displaying measured component values <img src="https://raw.githubusercontent.com/dretay/pm6306_remote/master/IMG_4582.jpg" align="right" width="208">
   - Shows currently measured voltage and current in addition to primary and secondary component readings
   - Allows entering numeric values (frequency and voltages) through an on-screen keypad for quicker setup
   - Allows selection of primary and secondary measurement parameters through on-screen dropdowns
