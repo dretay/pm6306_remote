@@ -10,10 +10,12 @@ import routes from '../constants/routes.json';
 import SweepChart from './SweepChart'
 
 type Props = {
-  location: object
+  location: object,
+  history: object,
 };
 export default function SweepPanel({
-  location
+  location,
+  history
 }: Props) {
 
 
@@ -112,6 +114,8 @@ export default function SweepPanel({
   let manuallyStopSweep = ()=>{
     setStopSweep(true);
   }
+  const {goBack} = history;
+
 
   return (
   <>
@@ -131,6 +135,11 @@ export default function SweepPanel({
                   Home
                 </Button>
               </Link>
+              <Button className={`float-left ${styles.nav_button_back} ml-10`}  variant="warning"
+                onClick={goBack}
+              >
+                Back
+              </Button>
             </div>
             <div className="ml-auto">
               <Button className={`float-right ${styles.nav_button}`} onClick={manuallyStopSweep} variant="danger" disabled={stopSweep || (currFrequency == stopFrequency)}>

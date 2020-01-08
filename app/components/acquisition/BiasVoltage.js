@@ -11,11 +11,11 @@ type Props = {
 function format_bias_voltage(dc_bias) {
   let dc_bias_val = 0;
   if(dc_bias!== undefined){
-    if(_.isString(dc_bias)){
-      dc_bias_val = dc_bias.split(' ')[1];
-    }
-    else if(_.isNumber(dc_bias)){
+    if(_.isNumber(dc_bias)){
       dc_bias_val = dc_bias;
+    }
+    else if(_.isString(dc_bias)){
+      dc_bias_val = dc_bias.split(' ')[1];
     }
     let converted_dc_bias = convert(dc_bias_val)
       .from('V')

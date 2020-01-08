@@ -25,39 +25,69 @@ type Props = {
 export default function SweepPanel({
 }: Props) {
 
-  const [primary_component, setPrimaryComponent] = useState("C");
-  const [secondary_component, setSecondaryComponent] = useState("IMPEDANCE");
-  const [start_frequency, setStartFrequency] = useState(100);
-  const [stop_frequency, setStopFrequency] = useState(1000);
-  const [ac_level, setAcLevel] = useState(1);
-  const [dc_bias, setDcBias] = useState("OFF");
-  const [bias_voltage, setBiasVoltage] = useState(0);
-  const [step_size, setStepSize] = useState(100);
+  const [primary_component, setPrimaryComponent] = useState(localStorage.getItem('primary_component') || "C");
+  const [secondary_component, setSecondaryComponent] = useState(localStorage.getItem('secondary_component') || "IMPEDANCE");
+  const [start_frequency, setStartFrequency] = useState(Number(localStorage.getItem('start_frequency')) || 100);
+  const [stop_frequency, setStopFrequency] = useState(localStorage.getItem('stop_frequency') || 1000);
+  const [ac_level, setAcLevel] = useState(Number(localStorage.getItem('ac_level')) || 1);
+  const [dc_bias, setDcBias] = useState(localStorage.getItem('dc_bias') || "OFF");
+  const [bias_voltage, setBiasVoltage] = useState(Number(localStorage.getItem('bias_voltage')) || 0);
+  const [step_size, setStepSize] = useState(Number(localStorage.getItem('step_size')) || 100);
 
+  useEffect(()=>{
+    localStorage.setItem('primary_component', primary_component);
+  }, [primary_component]);
   let set_primary_callback = (e)=>{
     let argument = e.target.getAttribute("argument") || "";
     setPrimaryComponent(argument);
   }
+
+  useEffect(()=>{
+    localStorage.setItem('secondary_component', secondary_component);
+  }, [secondary_component]);
   let set_secondary_callback = (e)=>{
     let argument = e.target.getAttribute("argument") || "";
     setSecondaryComponent(argument);
   }
+
+  useEffect(()=>{
+    localStorage.setItem('start_frequency', start_frequency);
+  }, [start_frequency]);
   let set_start_frequency_callback = (command, value)=>{
     setStartFrequency(value);
   }
+
+  useEffect(()=>{
+    localStorage.setItem('stop_frequency', stop_frequency);
+  }, [stop_frequency]);
   let set_stop_frequency_callback = (command, value)=>{
     setStopFrequency(value);
   }
+
+  useEffect(()=>{
+    localStorage.setItem('ac_level', ac_level);
+  }, [ac_level]);
   let set_ac_level_callback = (command, value)=>{
     setAcLevel(value);
   }
 
+  useEffect(()=>{
+    localStorage.setItem('dc_bias', dc_bias);
+  }, [dc_bias]);
   let set_dc_bias_callback = (command, value)=>{
     setDcBias(value);
   }
+
+  useEffect(()=>{
+    localStorage.setItem('bias_voltage', bias_voltage);
+  }, [bias_voltage]);
   let set_bias_voltage_callback = (command, value)=>{
-    setBiasVolgate(value);
+    setBiasVoltage(value);
   }
+
+  useEffect(()=>{
+    localStorage.setItem('step_size', step_size);
+  }, [step_size]);
   let set_step_size_callback = (command, value)=>{
     setStepSize(Number(value));
   }
