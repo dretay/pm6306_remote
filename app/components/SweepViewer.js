@@ -41,6 +41,7 @@ export default function SweepPanel({
         stepSize
       } = location.state;
       Promise.all([
+        pm6306.go_remote(),
         pm6306.send_message(`POSITION_FIX ${primaryComponent}`),
         pm6306.send_message(`PARAM ${secondaryComponent}`),
         pm6306.send_message(`AC_LEV ${acLevel}`),

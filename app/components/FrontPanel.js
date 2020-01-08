@@ -27,6 +27,12 @@ export default function FrontPanel({
 
   const toggle_polling = (value)=>{
     setIsActive(value);
+    if(value){
+      pm6306.go_remote();
+    }
+    else{
+    // pm6306.go_local();
+    }
   }
   function sleep(ms){
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -45,6 +51,7 @@ export default function FrontPanel({
     await get_device_setup();
   }
   useEffect(() => {
+    pm6306.go_remote();
     pm6306.send_message(`CONTIN`);
   },[]);
 
@@ -104,7 +111,7 @@ export default function FrontPanel({
           measured_voltage={measured_voltage}
           measured_current={measured_current}
           device_setup={device_setup}
-          toggle_polling={setIsActive}
+          toggle_polling={toggle_polling}
           callback={change_parameter}
         />
       </div>

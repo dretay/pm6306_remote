@@ -44,6 +44,12 @@ class PM6306 {
       metadata.LCR_METER_READY = true;
     });
   }
+  async go_remote(){
+    return this.send_message(SPECIAL_CMD_GO_REMOTE);
+  }
+  async go_local(){
+    return this.send_message(SPECIAL_CMD_GO_LOCAL);
+  }
   connect(){
     this.port = new serialport(path, {
       baudRate: 19200
