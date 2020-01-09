@@ -98,6 +98,8 @@ class PM6306 {
 
     if(status == 32){
       let error = await this.send_command(ERROR_QUERY_CMD);
+      await this.send_command(CLEAR_STATUS_CMD);
+      await this.send_command(`${STANDARD_EVENT_ENABLE_CMD} 255`)
       throw error;
     }
     return data;
