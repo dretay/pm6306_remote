@@ -80,11 +80,11 @@ export default function LCRInformation({
 
   const toggle_sampling = ()=>{
     if(polling_disabled){
-      toggle_polling(true);
+      toggle_polling(false);
       setPollingDisabled(false);
     }
     else{
-      toggle_polling(false);
+      toggle_polling(true);
       setPollingDisabled(true);
     }
   }

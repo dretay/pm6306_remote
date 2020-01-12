@@ -45,10 +45,10 @@ class PM6306 {
     });
   }
   async go_remote(){
-    return this.send_message(SPECIAL_CMD_GO_REMOTE);
+    return this.queue.add(()=> this.send_command(SPECIAL_CMD_GO_REMOTE));//go remote
   }
   async go_local(){
-    return this.send_message(SPECIAL_CMD_GO_LOCAL);
+    return this.queue.add(()=> this.send_command(SPECIAL_CMD_GO_LOCAL));//go remote
   }
   connect(){
     this.port = new serialport(path, {

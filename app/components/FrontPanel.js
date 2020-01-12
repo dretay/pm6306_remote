@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useRef } from 'react';
+import React, { useState,useEffect } from 'react';
 
 import LCRReading from './LCRReading';
 import LCRInformation from './LCRInformation';
@@ -7,17 +7,15 @@ import primary_options from '../constants/primary_options.json';
 import secondary_options from '../constants/secondary_options.json';
 import styles from './FrontPanel.css';
 import * as _ from 'underscore';
+import useInterval from '../utils/useInterval'
 
 type Props = {
 };
 export default function FrontPanel({
 }: Props) {
   let default_value = '---';
-  const [isActive, setIsActive] = useState(true);
-  // Use a ref to access the current count value in
-  // an async callback.
-  const isActiveRef = useRef(isActive);
-  isActiveRef.current = isActive;
+  const [pausePolling, setPausePolling] = useState(false);
+
 
   const [primary_value, setPrimaryValue] = useState(default_value);
   const [primary_parameter, setPrimaryParameter] = useState(default_value);
@@ -30,81 +28,85 @@ export default function FrontPanel({
 
   const [device_setup, setDeviceSetup] = useState("");
 
-  const toggle_polling = (value)=>{
-    setIsActive(value);
+  async function toggle_polling(value){
     if(value){
-      pm6306.go_remote();
+      setPausePolling(value);
+      await sleep(500);
+      await pm6306.go_local();
+    }
+    else{
+      await pm6306.go_remote();
+      setPausePolling(value);
     }
   }
   function sleep(ms){
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   async function get_device_setup() {
-    setIsActive(false);
+    setPausePolling(true);
+    await sleep(500);
     let data = await pm6306.send_message("*LRN?");
     if(_.isString(data)){
       setDeviceSetup(data);
     }
-    await sleep(100);
-    setIsActive(true);
+    await sleep(500);
+    setPausePolling(false);
   };
 
   async function change_parameter(command, value=""){
-    setIsActive(false);
+    setPausePolling(true);
+    await sleep(600);
     await pm6306.send_message(`${command} ${value}`);
     await get_device_setup();
   }
   useEffect(() => {
     pm6306.go_remote();
-    pm6306.send_message(`CONTIN`);
+    pm6306.send_message(`SINGLE`);
   },[]);
+  useInterval(() => {
+    if(!pausePolling){
+      return pm6306.send_message('TRIG;*OPC?').then(result => {
+        if(result == Number(1)){
+          return pm6306.send_message('com?;vol?;cur?').then(result => {
+            if(_.isString(result)){
+              const regexp = /((\w)\s([0-9-E\.]+)|over)/g;
+              const readings = [...result.matchAll(regexp)];
 
-  useEffect(() => {
-    let timerID = null;
-    if(isActiveRef.current){
-      timerID = setInterval(()=>{
-        setIsActive(false);
-        pm6306.send_message('com?;vol?;cur?').then(result => {
-          if(_.isString(result)){
-            const regexp = /((\w)\s([0-9-E\.]+)|over)/g;
-            const readings = [...result.matchAll(regexp)];
-
-            //handle overrange
-            if(readings[0][0] === "over"){
-              setPrimaryParameter(default_value);
-              setPrimaryValue(default_value);
-            }else{
-              setPrimaryParameter(readings[0][2]);
-              setPrimaryValue(readings[0][3]);
-            }
-
-            //annoyingly when there is only a dominant parameter 3 values are returned
-            if (readings.length == 3) {
-              setMeasuredVoltage(readings[1][3]);
-              setMeasuredCurrent(readings[2][3]);
-            } else {
               //handle overrange
-              if(readings[1][0] === "over"){
-                setSecondaryParameter(default_value);
-                setSecondaryValue(default_value);
+              if(readings[0][0] === "over"){
+                setPrimaryParameter(default_value);
+                setPrimaryValue(default_value);
               }else{
-                setSecondaryParameter(readings[1][2]);
-                setSecondaryValue(readings[1][3]);
+                setPrimaryParameter(readings[0][2]);
+                setPrimaryValue(readings[0][3]);
               }
-              setMeasuredVoltage(readings[2][3]);
-              setMeasuredCurrent(readings[3][3]);
-            }
-          }
-          setIsActive(true);
-        });
-      }, 500);
-    }
-    else if(!isActiveRef.current){
-      clearInterval(timerID);
-    }
-    return () => clearInterval(timerID);
 
-  },[isActive, primary_value, primary_parameter, secondary_value, secondary_parameter, measured_voltage, measured_current]);
+              //annoyingly when there is only a dominant parameter 3 values are returned
+              if (readings.length == 3) {
+                setMeasuredVoltage(readings[1][3]);
+                setMeasuredCurrent(readings[2][3]);
+              } else {
+                //handle overrange
+                if(readings[1][0] === "over"){
+                  setSecondaryParameter(default_value);
+                  setSecondaryValue(default_value);
+                }else{
+                  setSecondaryParameter(readings[1][2]);
+                  setSecondaryValue(readings[1][3]);
+                }
+                setMeasuredVoltage(readings[2][3]);
+                setMeasuredCurrent(readings[3][3]);
+              }
+            }
+          });
+        }
+        else{
+          console.log("error retrieving result from query");
+        }
+      });
+    }
+  }, 100);
+
   useEffect(() => {
     get_device_setup();
   },[]);
